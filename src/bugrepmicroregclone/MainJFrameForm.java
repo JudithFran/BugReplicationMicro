@@ -87,6 +87,11 @@ public class MainJFrameForm extends javax.swing.JFrame {
         jLabel3.setText("Identifying Replicated Bugs in Micro and Regular Code Clones");
 
         jButton2.setText("Percentage of Clone Fragments Containing Replicated Bugs");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Extent of Bug Replication in Buggy Clone Classes");
 
@@ -164,6 +169,33 @@ public class MainJFrameForm extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            String systemName = "";
+            systemName = jComboBox1.getSelectedItem().toString();
+            //System.out.println("System selected in ComboBox: " + systemName);
+            
+            InputParameters ip = new InputParameters();
+            ip.setParameters(systemName);
+                        
+            BugReplicationMicroRegularClones brm = new BugReplicationMicroRegularClones();
+            
+            brm.bugReplication();
+            
+            //System.out.println("---------------------------------------Regular Clone Analysis Starts Here--------------------------------------------\n");
+            //brm.bugReplicationR();
+            
+            //System.out.println("-----------------------------------------Micro Clone Analysis Starts Here--------------------------------------------\n");
+            //brm.bugReplicationM();
+        
+        }catch(Exception e){
+            System.out.println("error in BugReplicationMicro." + e);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
