@@ -16,6 +16,7 @@ public class InputParameters {
     
     public void setParameters(String sysName){
         try{
+            int flag = 0;
         
         if(sysName.equals("Ctags")){
                 systemName = sysName;
@@ -61,11 +62,12 @@ public class InputParameters {
         }
         else if(sysName.equals("Select")){
             System.out.println("Please select a valid subject system.");
+            flag = 1;
         }    
         
-        
-        System.out.println("This is inside setParameters systemName = " + systemName + " Programming language = " + programmingLanguage + " Regular path = " + pathRegular 
-            + " Micro path = " + pathMicro + " Last revision = " + lastRevision);
+        if(flag == 0)
+            System.out.println("This is inside setParameters systemName = " + systemName + " Programming language = " + programmingLanguage + " Regular path = " + pathRegular 
+                + " Micro path = " + pathMicro + " Last revision = " + lastRevision);
         
         }catch(Exception e){
             System.out.println("error in method setParameters = " + e);
