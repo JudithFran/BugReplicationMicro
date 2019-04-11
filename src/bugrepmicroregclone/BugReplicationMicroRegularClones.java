@@ -416,7 +416,7 @@ public class BugReplicationMicroRegularClones {
                 for(int j = 0; j<changedBugFixCommits.length; j++){
                     if(changedBugFixCommits[i][j] != null){
                         System.out.println("Revision number = " + changedBugFixCommits[i][j].revision);
-                        cfXmlFile = xmlFileParse(changedBugFixCommits[i][j].revision);
+                        cfXmlFile = fileRead(changedBugFixCommits[i][j].revision);
                         
                         
                         // Looping through the xml file of each revision
@@ -493,10 +493,10 @@ public class BugReplicationMicroRegularClones {
                     if(cfXmlFileMatch[i].revision == cfXmlFileMatch[j].revision){
                         System.out.println("Revision = " + cfXmlFileMatch[i].revision);
                         
-                        classID1 = getClassID(cfXmlFileMatch[i]);
+                        //classID1 = getClassID(cfXmlFileMatch[i]);
                         //System.out.println("classID1 = " + classID1);
                         
-                        classID2 = getClassID(cfXmlFileMatch[j]);
+                        //classID2 = getClassID(cfXmlFileMatch[j]);
                         //System.out.println("classID2 = " + classID2 + "\n");
                         
                         if(classID1 == classID2){
@@ -514,6 +514,43 @@ public class BugReplicationMicroRegularClones {
             e.printStackTrace();
         }
         return cfp;
+    }
+    
+    public CodeFragment[][] fileRead(int rev){
+        CodeFragment[][] cfFile = new CodeFragment[10000][10000];
+        try{
+            
+            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
+            
+            String str = "";
+            String numClass = "";
+            
+            while((str = br.readLine()) != null){
+                if(str.contains("<classinfo")){
+                    numClass = str.split("[ ]+")[1].trim().split("[=]+")[1].trim();
+                    System.out.println("numClass = " + numClass);
+                
+                }
+            
+            }
+        
+        } catch(Exception e){
+            System.out.println("error in method fileRead()." + e);
+            e.printStackTrace();
+        }
+        return cfFile;
+    
+    }
+    
+    public int isClonePairBinary(CodeFragment cf1, CodeFragment cf2){
+        try{
+        
+        } catch(Exception e){
+            System.out.println("error in method fileRead()." + e);
+            e.printStackTrace();
+        }
+        return 0;
+    
     }
     
     public CodeFragment getInstanceInNextRevision(CodeFragment cf) {
