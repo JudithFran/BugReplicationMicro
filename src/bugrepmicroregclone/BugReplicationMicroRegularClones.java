@@ -517,21 +517,42 @@ public class BugReplicationMicroRegularClones {
     }
     
     public CodeFragment[][] fileRead(int rev){
-        CodeFragment[][] cfFile = new CodeFragment[10000][10000];
+        CodeFragment[][] cfFile = new CodeFragment[500][500];
         try{
             
             BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
             
             String str = "";
-            String numClass = "";
+            int i = -1;
+            int j = -1;
             
             while((str = br.readLine()) != null){
-                if(str.contains("<classinfo")){
-                    numClass = str.split("[ ]+")[1].trim().split("[=]+")[1].trim();
-                    System.out.println("numClass = " + numClass);
                 
+                if(str.contains("<class ")){  
+                    i++;
+                    j = -1;
+                    continue;
                 }
-            
+                
+                if(str.contains("<source")){
+                        
+                    j++;
+                    cfFile[i][j] = new CodeFragment();
+                    cfFile[i][j].revision = rev;
+                    cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
+                    cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
+                    cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
+                        
+                    if (cfFile[i][j].filepath.contains("version-")) {
+                        cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
+                                
+                        String[] filePath = cfFile[i][j].filepath.split("version-\\d*\\/");
+                        cfFile[i][j].filepath = filePath[1];
+
+                        System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
+                            + " End Line = " + cfFile[i][j].endline);
+                    }                      
+                }               
             }
         
         } catch(Exception e){
