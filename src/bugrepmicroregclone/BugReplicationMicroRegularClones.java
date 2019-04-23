@@ -790,7 +790,7 @@ public class BugReplicationMicroRegularClones {
         
         // In this method I use cfFile (a two dimensional array) to store each xml file. In first dimension it will store the class number (classID) 
         // and in second dimension it will store each clone fragments (nclones in source tags).
-        CodeFragment[][] cfFile = new CodeFragment[5000][5000];
+        CodeFragment[][] cfFile = new CodeFragment[1000][1000];
         try{
             File regularXmlFile = new File(InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
             
@@ -818,9 +818,17 @@ public class BugReplicationMicroRegularClones {
                     
                     cfFile[i][j] = new CodeFragment();
                     cfFile[i][j].revision = rev;
-                    cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
-                    cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
-                    cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
+                    
+                    //cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
+                    cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
+                    
+                    //cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
+                    cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                    //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].startline = " + cfFile[i][j].startline);
+                    
+                    //cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
+                    cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
+                    //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].endline = " + cfFile[i][j].endline);
                         
                     if (cfFile[i][j].filepath.contains("version-")) {
                         cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
@@ -872,9 +880,14 @@ public class BugReplicationMicroRegularClones {
                     j++;
                     cfFile[i][j] = new CodeFragment();
                     cfFile[i][j].revision = rev;
-                    cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
-                    cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
-                    cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
+                    //cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
+                    cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
+                    
+                    //cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
+                    cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                    
+                    //cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
+                    cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
                         
                     if (cfFile[i][j].filepath.contains("version-")) {
                         cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
@@ -882,8 +895,8 @@ public class BugReplicationMicroRegularClones {
                         String[] filePath = cfFile[i][j].filepath.split("version-\\d*\\/");
                         cfFile[i][j].filepath = filePath[1];
 
-                        System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
-                            + " End Line = " + cfFile[i][j].endline);
+                        //System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
+                            //+ " End Line = " + cfFile[i][j].endline);
                     }                      
                 }               
             }
@@ -901,7 +914,7 @@ public class BugReplicationMicroRegularClones {
         
         // In this method I use cfFile (a two dimensional array) to store each xml file. In first dimension it will store the class number (classID) 
         // and in second dimension it will store each clone fragments (nclones in source tags).
-        CodeFragment[][] cfFile = new CodeFragment[500][500];
+        CodeFragment[][] cfFile = new CodeFragment[1000][1000];
         int classID = 0;
         try{
             
@@ -927,9 +940,14 @@ public class BugReplicationMicroRegularClones {
                     //System.out.println("Value of j in getClassID after increment = " + j);
                     cfFile[i][j] = new CodeFragment();
                     cfFile[i][j].revision = cf.revision;
-                    cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
-                    cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
-                    cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
+                    //cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
+                    cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
+                    
+                    //cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
+                    cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                    
+                    //cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
+                    cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
                         
                     if (cfFile[i][j].filepath.contains("version-")) {
                         cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
@@ -958,7 +976,7 @@ public class BugReplicationMicroRegularClones {
         
         // In this method I use cfFile (a two dimensional array) to store each xml file. In first dimension it will store the class number (classID) 
         // and in second dimension it will store each clone fragments (nclones in source tags).
-        CodeFragment[][] cfFile = new CodeFragment[1000][1000];
+        CodeFragment[][] cfFile = new CodeFragment[5000][5000];
         int classID = 0;
         try{
             
@@ -982,9 +1000,14 @@ public class BugReplicationMicroRegularClones {
                     j++;
                     cfFile[i][j] = new CodeFragment();
                     cfFile[i][j].revision = cf.revision;
-                    cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
-                    cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
-                    cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
+                    //cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
+                    cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
+                    
+                    //cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
+                    cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                    
+                    //cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
+                    cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
                         
                     if (cfFile[i][j].filepath.contains("version-")) {
                         cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
