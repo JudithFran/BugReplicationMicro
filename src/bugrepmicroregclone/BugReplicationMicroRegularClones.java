@@ -91,9 +91,7 @@ public class BugReplicationMicroRegularClones {
         String bugFixCommits = "";
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(InputParameters.systemName + " commitlog.txt")));
-            //BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("brlcad commitlog.txt"))); // Have to make it variable
-            //BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("ctags commitlog.txt"))); // Have to make it variable
-
+            
             String str = "";
             String prevString = "";
                 
@@ -134,14 +132,14 @@ public class BugReplicationMicroRegularClones {
     
     public CodeFragment[][] getChangedBugFixCommits() {
 
-        SingleChange[] changedBugFixCommits = new SingleChange[50000];
-        SingleChange[][] changedBugFixCommits2D = new SingleChange[10000][10000];
-        CodeFragment[][] changedBugFixCommits2DNew = new CodeFragment[10000][10000];
+        SingleChange[] changedBugFixCommits = new SingleChange[50000];   
+        SingleChange[][] changedBugFixCommits2D = new SingleChange[5000][5000]; // was 10000 before optimization
+        CodeFragment[][] changedBugFixCommits2DNew = new CodeFragment[5000][5000];  // was 10000 before optimization
 
         try {
 
             String str = getBugFixCommits();
-            String[] bugFixCommits = new String[10000];
+            String[] bugFixCommits = new String[10000];  
 
             //SingleChange[] changes = new SingleChange[10000];
             SingleChange[] changes = db.getChangedRevisions();
@@ -154,7 +152,7 @@ public class BugReplicationMicroRegularClones {
             bugFixCommits = str.split("  ");
 
             /*---------------------------------------- Preprocessing bugFixCommits Start ---------------------------------------------------------------*/
-            String[] bugFixCommitsReverse = new String[10000];
+            String[] bugFixCommitsReverse = new String[10000];   
             int i = 0;
             for (int j = bugFixCommits.length - 1; j >= 0; j--) {
                 bugFixCommitsReverse[i] = bugFixCommits[j];
@@ -308,7 +306,7 @@ public class BugReplicationMicroRegularClones {
     public ArrayList<CodeFragment> bugReplicationR(){
         ArrayList<CodeFragment> bugRep = new ArrayList<>();
         try{          
-            CodeFragment[][] cloneFragmentPair = new CodeFragment[10000][2];
+            CodeFragment[][] cloneFragmentPair = new CodeFragment[5000][2]; // was 10000 before optimization
             
             cloneFragmentPair = isClonePair();
             
@@ -404,7 +402,7 @@ public class BugReplicationMicroRegularClones {
     public ArrayList<CodeFragment> bugReplicationM(){
         ArrayList<CodeFragment> bugRep = new ArrayList<>();
         try{
-            CodeFragment[][] cloneFragmentPair = new CodeFragment[50000][2];
+            CodeFragment[][] cloneFragmentPair = new CodeFragment[50000][2];  
             
             cloneFragmentPair = isClonePairMicro();
             
@@ -499,9 +497,9 @@ public class BugReplicationMicroRegularClones {
     }
     
     public CodeFragment[][] isClonePair(){
-        CodeFragment[][] cfp = new CodeFragment[10000][2];
+        CodeFragment[][] cfp = new CodeFragment[5000][2];   // was 10000 before optimization
         try{
-            CodeFragment[][] changedBugFixCommits = new CodeFragment[10000][10000];
+            CodeFragment[][] changedBugFixCommits = new CodeFragment[500][500];   // was 10000 before optimization
             changedBugFixCommits = getChangedBugFixCommits();
             
             CodeFragment[][] cfFile = new CodeFragment[500][500];
@@ -614,16 +612,16 @@ public class BugReplicationMicroRegularClones {
     }
     
     public CodeFragment[][] isClonePairMicro(){
-        CodeFragment[][] cfpMicro = new CodeFragment[50000][2];
+        CodeFragment[][] cfpMicro = new CodeFragment[50000][2]; 
         try{
-            CodeFragment[][] changedBugFixCommits = new CodeFragment[10000][10000];
+            CodeFragment[][] changedBugFixCommits = new CodeFragment[500][500]; // was 10000 before optimization
             changedBugFixCommits = getChangedBugFixCommits();
             
-            CodeFragment[][] cfXmlFileMicro = new CodeFragment[10000][10000];
+            CodeFragment[][] cfXmlFileMicro = new CodeFragment[5000][5000]; // was 10000 before optimization
             
-            CodeFragment[] cfXmlFileMatch = new CodeFragment[50000];
+            CodeFragment[] cfXmlFileMatch = new CodeFragment[10000];    // was 50000 before optimization
             
-            CodeFragment[][] cfpReg = new CodeFragment[50000][2];
+            CodeFragment[][] cfpReg = new CodeFragment[10000][2];   // was 50000 before optimization
             
             int x = 0;
             
@@ -811,22 +809,17 @@ public class BugReplicationMicroRegularClones {
                 }
                 
                 if(str.contains("<source")){
-                    //System.out.println("\nValue of i in fileRead = " + i + "\n");
-                    //System.out.println("Value of j in fileRead = " + j);
-                    j++;
-                    //System.out.println("Value of j in fileRead after increment = " + j);    
+                    
+                    j++;    
                     
                     cfFile[i][j] = new CodeFragment();
                     cfFile[i][j].revision = rev;
                     
-                    //cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
                     cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
                     
-                    //cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
                     cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
                     //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].startline = " + cfFile[i][j].startline);
                     
-                    //cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
                     cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
                     //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].endline = " + cfFile[i][j].endline);
                         
@@ -880,13 +873,11 @@ public class BugReplicationMicroRegularClones {
                     j++;
                     cfFile[i][j] = new CodeFragment();
                     cfFile[i][j].revision = rev;
-                    //cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
+                    
                     cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
                     
-                    //cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
                     cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
                     
-                    //cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
                     cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
                         
                     if (cfFile[i][j].filepath.contains("version-")) {
@@ -934,19 +925,15 @@ public class BugReplicationMicroRegularClones {
                 }
                 
                 if(str.contains("<source")){
-                    //classID = i;  
-                    //System.out.println("Value of j in getClassID = " + j);
+                    //classID = i;
                     j++;
-                    //System.out.println("Value of j in getClassID after increment = " + j);
                     cfFile[i][j] = new CodeFragment();
                     cfFile[i][j].revision = cf.revision;
-                    //cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
+                    
                     cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
                     
-                    //cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
                     cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
                     
-                    //cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
                     cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
                         
                     if (cfFile[i][j].filepath.contains("version-")) {
@@ -1000,13 +987,11 @@ public class BugReplicationMicroRegularClones {
                     j++;
                     cfFile[i][j] = new CodeFragment();
                     cfFile[i][j].revision = cf.revision;
-                    //cfFile[i][j].filepath = str.split("[ ]+")[1].trim().split("[\"]+")[1].trim();
+                    
                     cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
                     
-                    //cfFile[i][j].startline = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
                     cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
                     
-                    //cfFile[i][j].endline = Integer.parseInt(str.split("[ ]+")[3].trim().split("[\"]+")[1].trim());
                     cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
                         
                     if (cfFile[i][j].filepath.contains("version-")) {
