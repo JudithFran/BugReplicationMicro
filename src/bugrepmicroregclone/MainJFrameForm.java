@@ -43,7 +43,6 @@ public class MainJFrameForm extends javax.swing.JFrame {
         jLabel1.setText("Select Subject System");
 
         jButton1.setText("Show System Info");
-        jButton1.setActionCommand("Show System Info");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -94,6 +93,11 @@ public class MainJFrameForm extends javax.swing.JFrame {
         });
 
         jButton3.setText("Extent of Bug Replication in Buggy Clone Classes");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Percentage of Replicated Bugs");
 
@@ -192,10 +196,30 @@ public class MainJFrameForm extends javax.swing.JFrame {
             //brm.bugReplicationM();
         
         }catch(Exception e){
-            System.out.println("error in BugReplicationMicro." + e);
+            System.out.println("error in jButton2ActionPerformed: " + e);
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try{
+        // TODO add your handling code here:
+        String systemName = "";
+            systemName = jComboBox1.getSelectedItem().toString();
+            //System.out.println("System selected in ComboBox: " + systemName);
+            
+            InputParameters ip = new InputParameters();
+            ip.setParameters(systemName);
+                        
+            BugReplicationMicroRegularClones brm = new BugReplicationMicroRegularClones();
+            
+            brm.bugReplicationRQ2();
+            
+        }catch(Exception e){
+            System.out.println("error in jButton3ActionPerformed: " + e);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
