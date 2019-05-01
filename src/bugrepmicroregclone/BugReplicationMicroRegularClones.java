@@ -303,6 +303,192 @@ public class BugReplicationMicroRegularClones {
         }
     }
     
+    //-------------------------------------- This function implementing RQ2 ---------------------------------------
+    
+    public void bugReplicationRQ2(){
+        try{
+            
+            // --------------------------Implementing RQ2 for Regular Clones----------------------------
+            ArrayList<CodeFragment> bugRepR = new ArrayList<>();
+
+            bugRepR = bugReplicationR();
+  
+            int classID1R = 0, classID2R = 0, countRepR = 1, nclonesR = 0, flagR = 0;
+            
+            for(int i = 0; i < bugRepR.size(); i++){
+                for(int j = i+1; j < bugRepR.size(); j++){
+                    //if(bugRepR.get(i).revision == bugRepR.get(j).revision && bugRepR.get(i).filepath.equals(bugRepR.get(j).filepath)){
+                    if(bugRepR.get(i).revision == bugRepR.get(j).revision){
+                        System.out.println("Revision number (R) = " + bugRepR.get(i).revision);
+                        classID1R = getClassID(bugRepR.get(i));
+                        classID2R = getClassID(bugRepR.get(j));
+                        
+                        if(classID1R == classID2R){
+                            countRepR++;
+                            i++;
+                        }
+                        flagR = 1;
+                        
+                    }
+                    
+                }
+                if(flagR == 1){
+                    nclonesR = nclonesR + getCloneNumber(bugRepR.get(i-1));
+                    flagR = 0;
+                }
+                
+                System.out.println("At i = " + i + " countRepR = " + countRepR);
+                System.out.println("At i = " + i + " nclonesR = " + nclonesR);
+                countRepR++;
+            }
+            
+            // --------------------------Implementing RQ2 for Micro Clones----------------------------
+            ArrayList<CodeFragment> bugRepM = new ArrayList<>();
+
+            bugRepM = bugReplicationM();
+  
+            int classID1M = 0, classID2M = 0, countRepM = 1, nclonesM = 0, flagM = 0;
+            
+            for(int i = 0; i < bugRepM.size(); i++){
+                for(int j = i+1; j < bugRepM.size(); j++){
+                    //if(bugRepR.get(i).revision == bugRepR.get(j).revision && bugRepR.get(i).filepath.equals(bugRepR.get(j).filepath)){
+                    if(bugRepM.get(i).revision == bugRepM.get(j).revision){
+                        System.out.println("Revision number (M) = " + bugRepM.get(i).revision);
+                        classID1M = getClassIDMicro(bugRepM.get(i));
+                        classID2M = getClassIDMicro(bugRepM.get(j));
+                        
+                        if(classID1M == classID2M){
+                            countRepM++;
+                            i++;
+                        }
+                        flagM = 1;
+                        
+                    }
+                    
+                }
+                if(flagM == 1){
+                    nclonesM = nclonesM + getCloneNumberMicro(bugRepM.get(i-1));
+                    flagM = 0;
+                }
+                
+                System.out.println("At i = " + i + " countRepM = " + countRepM);
+                System.out.println("At i = " + i + " nclonesM = " + nclonesM);
+                countRepM++;
+            }
+        }catch(Exception e){
+            System.out.println("Error in bugReplicationRQ2: " + e);
+            e.printStackTrace();
+        }
+    }
+    
+    public int getCloneNumber(CodeFragment cf) {
+        // In this method I use cfFile (a two dimensional array) to store each xml file. In first dimension it will store the class number (classID) 
+        // and in second dimension it will store each clone fragments (nclones in source tags).
+        CodeFragment[][] cfFile = new CodeFragment[1000][1000];
+        int numClones = 0;
+        try{
+            
+            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + cf.revision + "_blocks-blind-clones/version-" + cf.revision + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
+            
+            String str = "";
+            int i = -1;
+            int j = -1;
+            
+            while((str = br.readLine()) != null){
+                
+                if(str.contains("<class ")){ 
+                    numClones = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
+                    i++;
+                    j = -1;
+                    continue;
+                }
+                
+                if(str.contains("<source")){
+                    j++;
+                    cfFile[i][j] = new CodeFragment();
+                    cfFile[i][j].revision = cf.revision;
+                    
+                    cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
+                    
+                    cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                    
+                    cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
+                        
+                    if (cfFile[i][j].filepath.contains("version-")) {
+                        cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
+                                
+                        String[] filePath = cfFile[i][j].filepath.split("version-\\d*\\/");
+                        cfFile[i][j].filepath = filePath[1];
+
+                        //System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
+                            //+ " End Line = " + cfFile[i][j].endline);
+                    }
+                    
+                    if(cf.filepath.equals(cfFile[i][j].filepath) && cf.startline == cfFile[i][j].startline && cf.endline == cfFile[i][j].endline)
+                        return numClones;
+                }               
+            }
+        }catch(Exception e){
+            System.out.println("Error in getCloneNumber: " + e);
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    public int getCloneNumberMicro(CodeFragment cf) {
+        // In this method I use cfFile (a two dimensional array) to store each xml file. In first dimension it will store the class number (classID) 
+        // and in second dimension it will store each clone fragments (nclones in source tags).
+        CodeFragment[][] cfFile = new CodeFragment[5000][5000];
+        int numClones = 0;
+        try{
+            
+            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathMicro + cf.revision + "_blocks-blind-clones/version-" + cf.revision + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
+            
+            String str = "";
+            int i = -1;
+            int j = -1;
+            
+            while((str = br.readLine()) != null){
+                
+                if(str.contains("<class ")){  
+                    numClones = Integer.parseInt(str.split("[ ]+")[2].trim().split("[\"]+")[1].trim());
+                    i++;
+                    j = -1;
+                    continue;
+                }
+                
+                if(str.contains("<source")){   
+                    j++;
+                    cfFile[i][j] = new CodeFragment();
+                    cfFile[i][j].revision = cf.revision;
+                    
+                    cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
+                    
+                    cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                    
+                    cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
+                        
+                    if (cfFile[i][j].filepath.contains("version-")) {
+                        cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
+                                
+                        String[] filePath = cfFile[i][j].filepath.split("version-\\d*\\/");
+                        cfFile[i][j].filepath = filePath[1];
+
+                        //System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
+                            //+ " End Line = " + cfFile[i][j].endline);
+                    }
+                    
+                    if(cf.filepath.equals(cfFile[i][j].filepath) && cf.startline == cfFile[i][j].startline && cf.endline == cfFile[i][j].endline)
+                        return numClones;
+                }               
+            }
+        }catch(Exception e){
+            System.out.println("Errro in getCloneNumberMicro: ");
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
     public ArrayList<CodeFragment> bugReplicationR(){
         ArrayList<CodeFragment> bugRep = new ArrayList<>();
         try{          
