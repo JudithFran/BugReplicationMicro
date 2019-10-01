@@ -87,6 +87,12 @@ public class BugReplicationMicroRegularClones {
     DBConnect db = new DBConnect();
     CompareChanges cc = new CompareChanges();
     
+    int countRevR = 0;
+    int countRevRepR = 0;
+    
+    int countRevM = 0;
+    int countRevRepM = 0;
+    
     public String getBugFixCommits() {
         String bugFixCommits = "";
         try {
@@ -489,6 +495,35 @@ public class BugReplicationMicroRegularClones {
         return 0;
     }
     
+    //-------------------------------------- This function implementing RQ3 ---------------------------------------
+    
+    public void bugReplicationRQ3(){
+        try{
+            
+            // --------------------------Implementing RQ3 for Regular Clones----------------------------
+            
+            bugReplicationR();
+            
+            System.out.println("Results of RQ3 Regular code clones:");
+            System.out.println("Total Number of Distinct Bugs(revision) of code clones for Regular = " + countRevR);
+            System.out.println("Total Distinct Number of Replicated Bug Revision in Regular code clone = " + countRevRepR);
+            System.out.println("Percentage of Replicated Bugs in Regular code clones = " + (float) countRevRepR/countRevR*100 + "%\n");
+            
+            
+            bugReplicationM();
+            
+            System.out.println("Results of RQ3 Micro code clones:");
+            System.out.println("Total Number of Distinct Bugs(revision) of code clones for Micro = " + countRevM);
+            System.out.println("Total Distinct Number of Replicated Bug Revision in Micro code clone = " + countRevRepM);
+            System.out.println("Percentage of Replicated Bugs in Micro code clones = " + (float) countRevRepM/countRevM*100 + "%\n");
+            
+            
+        }catch(Exception e){
+            System.out.println("Error in bugReplicationRQ3: " + e);
+            e.printStackTrace();
+        }
+    }
+    
     public ArrayList<CodeFragment> bugReplicationR(){
         ArrayList<CodeFragment> bugRep = new ArrayList<>();
         try{          
@@ -513,6 +548,8 @@ public class BugReplicationMicroRegularClones {
                     
                     
             System.out.println("Total number of distinct bugs(revision) of code clones for Regular = " + countRevision);
+            
+            countRevR = countRevision;
             
             
             // Finding Replicated Bugs
@@ -572,7 +609,10 @@ public class BugReplicationMicroRegularClones {
                 if(bugRep.get(i).revision != bugRep.get(i+1).revision)
                     countRevisionRep++;   
             
+            // For RQ3
             System.out.println("\nTotal distinct number of replicated bug revision in regular code clone = " + countRevisionRep);
+            
+            countRevRepR = countRevisionRep;
             
             float averageCountRegular = (float)bugRep.size()/countRevisionRep;
                         
@@ -609,7 +649,7 @@ public class BugReplicationMicroRegularClones {
                     
             System.out.println("Total number of distinct bugs(revision) of code clones for Micro = " + countRevision);
             
-            
+            countRevM = countRevision;
             
             // Finding Replicated Bugs
             int numReplicatedBugFixCommits = 0;
@@ -669,7 +709,10 @@ public class BugReplicationMicroRegularClones {
                 if(bugRep.get(i).revision != bugRep.get(i+1).revision)
                     countRevisionRep++;   
             
+            // for RQ3
             System.out.println("\nTotal distinct number of replicated bug revision in micro code clone = " + countRevisionRep);
+            
+            countRevRepM = countRevisionRep;
             
             float averageCountMicro = (float)bugRep.size()/countRevisionRep;
                         
