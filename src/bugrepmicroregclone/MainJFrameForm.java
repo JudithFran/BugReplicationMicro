@@ -100,6 +100,11 @@ public class MainJFrameForm extends javax.swing.JFrame {
         });
 
         jButton4.setText("Percentage of Replicated Bugs");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Percentage of Severe Replicated Bugs");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -172,12 +177,29 @@ public class MainJFrameForm extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+        try{
+        String systemName = "";
+            systemName = jComboBox1.getSelectedItem().toString();
+            //System.out.println("System selected in ComboBox: " + systemName);
+            
+            InputParameters ip = new InputParameters();
+            ip.setParameters(systemName);
+                        
+            BugReplicationMicroRegularClones brm = new BugReplicationMicroRegularClones();
+            
+            brm.bugReplicationRQ4();
+            
+            brm.bugReplication();
+            
+        }catch(Exception e){
+            System.out.println("error in jButton5ActionPerformed(RQ4): " + e);
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         try {
-            // TODO add your handling code here:
             String systemName = "";
             systemName = jComboBox1.getSelectedItem().toString();
             //System.out.println("System selected in ComboBox: " + systemName);
@@ -196,7 +218,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
             //brm.bugReplicationM();
         
         }catch(Exception e){
-            System.out.println("error in jButton2ActionPerformed: " + e);
+            System.out.println("error in jButton2ActionPerformed(RQ1): " + e);
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -216,11 +238,32 @@ public class MainJFrameForm extends javax.swing.JFrame {
             brm.bugReplicationRQ2();
             
         }catch(Exception e){
-            System.out.println("error in jButton3ActionPerformed: " + e);
+            System.out.println("error in jButton3ActionPerformed(RQ2): " + e);
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        try{
+        String systemName = "";
+            systemName = jComboBox1.getSelectedItem().toString();
+            //System.out.println("System selected in ComboBox: " + systemName);
+            
+            InputParameters ip = new InputParameters();
+            ip.setParameters(systemName);
+                        
+            BugReplicationMicroRegularClones brm = new BugReplicationMicroRegularClones();
+            
+            brm.bugReplicationRQ3();
+            
+            
+        }catch(Exception e){
+            System.out.println("error in jButton4ActionPerformed(RQ3): " + e);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+    
     /**
      * @param args the command line arguments
      */
