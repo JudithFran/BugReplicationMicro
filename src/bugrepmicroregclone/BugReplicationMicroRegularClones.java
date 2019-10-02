@@ -93,6 +93,8 @@ public class BugReplicationMicroRegularClones {
     int countRevM = 0;
     int countRevRepM = 0;
     
+    int RQ4 = 0;
+    
     public String getBugFixCommits() {
         String bugFixCommits = "";
         try {
@@ -136,6 +138,148 @@ public class BugReplicationMicroRegularClones {
         return bugFixCommits;
     }
     
+    // For RQ4 use this method
+    
+    public String getBugFixCommitsRQ4() {
+        String bugFixCommits = "";
+        try{
+            String[] bugFixCommitsMockus = new String[10000];
+            String[] bugFixCommitsLamkanfi = new String[10000];
+            String[] bugFixCommitsTemp = new String[10000];
+            
+            String str1 = getBugFixCommitsMockus();
+            System.out.println ("Revisions that were created because of a bug fix (Mockus) = " + str1);
+            bugFixCommitsMockus = str1.trim().split("  ");
+            
+            for(int i = 0; i < bugFixCommitsMockus.length; i++)
+                System.out.println ("Revisions that were created because of a bug fix in bugFixCommitsMockus["+i+"] array (Mockus) = " + bugFixCommitsMockus[i]);
+            
+            String str2 = getBugFixCommitsLamkanfi();
+            System.out.println ("Revisions that were created because of a bug fix (Lamkanfi) = " + str2);
+            bugFixCommitsLamkanfi = str2.trim().split("  ");
+            
+            for(int i = 0; i < bugFixCommitsLamkanfi.length; i++)
+                System.out.println ("Revisions that were created because of a bug fix in bugFixCommitsLamkanfi["+i+"] array (Lamkanfi) = " + bugFixCommitsLamkanfi[i]);
+            
+            // Finding common commits in both arrays 
+            
+            for (int i = 0; i < bugFixCommitsMockus.length; i++) {
+                for (int j = 0; j < bugFixCommitsLamkanfi.length; j++) {
+                    if (bugFixCommitsMockus[i].equals(bugFixCommitsLamkanfi[j])) {
+                        // got the duplicate element
+                        //if (!bugFixCommits.contains(" " + bugFixCommitsMockus[i] + " ")) {
+                            bugFixCommits += " " + bugFixCommitsMockus[i] + " ";
+                        //}
+                    }
+                }
+            } 
+            System.out.println ("Revisions that were created because of a bug fix (Mockus and Lamkanfi) = " + bugFixCommits);
+            
+            bugFixCommitsTemp = bugFixCommits.trim().split("  ");
+            
+            for(int i = 0; i < bugFixCommitsTemp.length; i++)
+                System.out.println ("Revisions that were created because of a bug fix in bugFixCommitsTemp["+i+"] array (Temp) = " + bugFixCommitsTemp[i]);
+            
+            
+        } catch (Exception e) {
+            System.out.println("error in getBugFixCommits = " + e);
+        }
+
+        return bugFixCommits;
+    }
+    
+    public String getBugFixCommitsMockus() {
+        String bugFixCommits = "";
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(InputParameters.systemName + " commitlog.txt")));
+            //BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("brlcad commitlog.txt"))); // Have to make it variable
+            //BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("ctags commitlog.txt"))); // Have to make it variable
+
+            String str = "";
+            String prevString = "";
+                
+            int commit = 0;
+            while ((str = br.readLine()) != null) {
+                if (str.trim().length() == 0) {
+                    continue;
+                }
+
+                if (prevString.contains("--------------------------------")) {
+                    //this is the starting of a commit report.
+                    //we need to know the commit number.
+                    String str1 = str.trim().split("[ ]+")[0].trim();
+                    str1 = str1.substring(1);
+                    commit = Integer.parseInt(str1);
+                    //System.out.println (commit);
+                } else {
+                    //according to the study of Mockus
+                    if (str.toLowerCase().contains("bug") || str.toLowerCase().contains("fix") || str.toLowerCase().contains("fixup") || str.toLowerCase().contains("error") || str.toLowerCase().contains("fail")) 
+                    //if (str.contains ("bug") || str.contains("fix") || str.contains ("fixup") || str.contains ("error") || str.contains ("fail"))
+                    {
+                        if (!bugFixCommits.contains(" " + commit + " ")) {
+                            bugFixCommits += " " + commit + " ";
+                        }
+                    }                                          
+                }
+                prevString = str;
+            }
+            br.close();
+            //System.out.println ("Revisions that were created because of a bug fix = " + bugFixCommits);
+
+        } catch (Exception e) {
+            System.out.println("error in getBugFixCommitsMockus = " + e);
+        }
+
+        return bugFixCommits;
+    }
+    
+    public String getBugFixCommitsLamkanfi() {
+        String bugFixCommits = "";
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(InputParameters.systemName + " commitlog.txt")));
+            //BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("brlcad commitlog.txt"))); // Have to make it variable
+            //BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("ctags commitlog.txt"))); // Have to make it variable
+
+            String str = "";
+            String prevString = "";
+            
+            int commit = 0;
+            while ((str = br.readLine()) != null) {
+                if (str.trim().length() == 0) {
+                    continue;
+                }
+
+                if (prevString.contains("--------------------------------")) {
+                    //this is the starting of a commit report.
+                    //we need to know the commit number.
+                    String str1 = str.trim().split("[ ]+")[0].trim();
+                    str1 = str1.substring(1);
+                    commit = Integer.parseInt(str1);
+                    //System.out.println (commit);
+                } else {
+                                            
+                    // Severe bugs according to Lamkanfi
+                    if (str.toLowerCase().contains("fault") || str.toLowerCase().contains("machin") || str.toLowerCase().contains("reboot") || str.toLowerCase().contains("reinstal") || str.toLowerCase().contains("lockup") || str.toLowerCase().contains("seemingli") || str.toLowerCase().contains("perman") || str.toLowerCase().contains("instantli") || str.toLowerCase().contains("segfault") || str.toLowerCase().contains("compil")
+                        || str.toLowerCase().contains("hang") || str.toLowerCase().contains("freez") || str.toLowerCase().contains("deadlock") || str.toLowerCase().contains("thread") || str.toLowerCase().contains("slow") || str.toLowerCase().contains("anymor") || str.toLowerCase().contains("memori") || str.toLowerCase().contains("tick") || str.toLowerCase().contains("jvm") || str.toLowerCase().contains("adapt") 
+                        || str.toLowerCase().contains("deadlock") || str.toLowerCase().contains("sigsegv") || str.toLowerCase().contains("relat") || str.toLowerCase().contains("caus") || str.toLowerCase().contains("snapshot") || str.toLowerCase().contains("segment") || str.toLowerCase().contains("core") || str.toLowerCase().contains("unexpectedli") || str.toLowerCase().contains("build") || str.toLowerCase().contains("loop")) 
+                    {
+                        if (!bugFixCommits.contains(" " + commit + " ")) {
+                            bugFixCommits += " " + commit + " ";
+                        }
+                    }
+                }
+                prevString = str;
+            }
+            br.close();
+            //System.out.println ("Revisions that were created because of a bug fix = " + bugFixCommits);
+
+        } catch (Exception e) {
+            System.out.println("error in getBugFixCommitsLamkanfi = " + e);
+        }
+
+        return bugFixCommits;
+    }
+    
     public CodeFragment[][] getChangedBugFixCommits() {
 
         SingleChange[] changedBugFixCommits = new SingleChange[50000];   
@@ -143,8 +287,13 @@ public class BugReplicationMicroRegularClones {
         CodeFragment[][] changedBugFixCommits2DNew = new CodeFragment[5000][5000];  // was 10000 before optimization
 
         try {
-
-            String str = getBugFixCommits();
+            String str = "";
+            
+            if (RQ4 == 0)
+                str = getBugFixCommits();
+            else if (RQ4 == 1)
+                str = getBugFixCommitsRQ4();
+            
             String[] bugFixCommits = new String[10000];  
 
             //SingleChange[] changes = new SingleChange[10000];
@@ -520,6 +669,21 @@ public class BugReplicationMicroRegularClones {
             
         }catch(Exception e){
             System.out.println("Error in bugReplicationRQ3: " + e);
+            e.printStackTrace();
+        }
+    }
+    
+    //-------------------------------------- This function implementing RQ4 ---------------------------------------
+    
+    public void bugReplicationRQ4(){
+        try{
+            
+            // --------------------------Implementing RQ4 for Regular Clones----------------------------
+            
+            RQ4 = 1;
+            
+        }catch(Exception e){
+            System.out.println("Error in bugReplicationRQ4: " + e);
             e.printStackTrace();
         }
     }
