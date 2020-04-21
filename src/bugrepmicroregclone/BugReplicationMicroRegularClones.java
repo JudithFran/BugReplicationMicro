@@ -1187,8 +1187,8 @@ public class BugReplicationMicroRegularClones {
             
             if(regularXmlFile.exists()){
             
-            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
-            
+            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (regularXmlFile))); // All Type           
+            //BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
             String str = "";
             int i = -1;
             int j = -1;
@@ -1209,6 +1209,7 @@ public class BugReplicationMicroRegularClones {
                     cfFile[i][j].revision = rev;
                     
                     cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
+                    //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].filepath = " + cfFile[i][j].filepath);
                     
                     cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
                     //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].startline = " + cfFile[i][j].startline);
@@ -1223,7 +1224,7 @@ public class BugReplicationMicroRegularClones {
                         cfFile[i][j].filepath = filePath[1];
 
                         //System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
-                            //+ " End Line = " + cfFile[i][j].endline);
+                        //    + " End Line = " + cfFile[i][j].endline);
                     }                      
                 }               
             }
