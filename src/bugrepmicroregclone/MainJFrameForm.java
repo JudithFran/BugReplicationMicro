@@ -37,6 +37,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -113,6 +114,13 @@ public class MainJFrameForm extends javax.swing.JFrame {
             }
         });
 
+        jButton6.setText("Percentage of Line Coverage");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -129,7 +137,8 @@ public class MainJFrameForm extends javax.swing.JFrame {
                         .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -147,7 +156,9 @@ public class MainJFrameForm extends javax.swing.JFrame {
                 .addComponent(jButton4)
                 .addGap(18, 18, 18)
                 .addComponent(jButton5)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addComponent(jButton6)
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
@@ -178,6 +189,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         try{
+        // ---------------------------------------------------------------- RQ4 ---------------------------------------------------------------------
         String systemName = "";
             systemName = jComboBox1.getSelectedItem().toString();
             //System.out.println("System selected in ComboBox: " + systemName);
@@ -200,7 +212,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         try {
-            // ------------------ RQ1 -----------------------------
+            // ---------------------------------------------------------------- RQ1 ---------------------------------------------------------------------
             String systemName = "";
             systemName = jComboBox1.getSelectedItem().toString();
             //System.out.println("System selected in ComboBox: " + systemName);
@@ -225,8 +237,9 @@ public class MainJFrameForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try{
         // TODO add your handling code here:
+        try{
+        // ---------------------------------------------------------------- RQ2 ---------------------------------------------------------------------
         String systemName = "";
             systemName = jComboBox1.getSelectedItem().toString();
             //System.out.println("System selected in ComboBox: " + systemName);
@@ -247,6 +260,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         try{
+        // ---------------------------------------------------------------- RQ3 ---------------------------------------------------------------------
         String systemName = "";
             systemName = jComboBox1.getSelectedItem().toString();
             //System.out.println("System selected in ComboBox: " + systemName);
@@ -264,6 +278,43 @@ public class MainJFrameForm extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton4ActionPerformed
+  
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        try{
+        // ---------------------------------------------------------------- RQ5 ---------------------------------------------------------------------
+        long startTime = System.currentTimeMillis();
+        String systemName = "";
+            systemName = jComboBox1.getSelectedItem().toString();
+            //System.out.println("System selected in ComboBox: " + systemName);
+            
+            InputParameters ip = new InputParameters();
+            ip.setParameters(systemName);
+                        
+            BugReplicationMicroRegularClones brm = new BugReplicationMicroRegularClones();
+            
+            brm.bugReplicationRQ5();
+            
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            long sTime = (long) (elapsedTime*0.001);
+            long mTime = sTime/60;
+            sTime = sTime%60;
+            long hTime;
+
+            if(mTime >= 60) {
+                hTime = mTime/60;
+                mTime = mTime%60;
+                System.out.println("Total execution time for RQ5 = " + hTime + " hours " + mTime + " minutes");
+            }
+            else
+                System.out.println("Total execution time for RQ5 = " + mTime + " minutes " + sTime + " seconds");
+        }catch(Exception e){
+            System.out.println("error in jButton4ActionPerformed(RQ5): " + e);
+            e.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_jButton6ActionPerformed
     
     /**
      * @param args the command line arguments
@@ -306,6 +357,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -688,6 +688,189 @@ public class BugReplicationMicroRegularClones {
         }
     }
     
+    //-------------------------------------- This function implementing RQ5 ---------------------------------------
+    
+    public void bugReplicationRQ5(){
+        try{
+            // -----------------------------Implementing RQ5 for Regular Clones---------------------------------
+            ArrayList<CodeFragment> bugRepR = new ArrayList<>();
+            int lineNumberR = 0;
+            int lineNumberRepR = 0;
+            
+            CodeFragment[][] changedBugFixCommits = new CodeFragment[500][500];   // was 10000 before optimization
+            changedBugFixCommits = getChangedBugFixCommits();
+            
+            // Looping through the changed bug-fix commit 2D array
+            for(int i = 0; i<changedBugFixCommits.length; i++){
+                for(int j = 0; j<changedBugFixCommits.length; j++){
+                    if(changedBugFixCommits[i][j] != null){
+                        //System.out.println("Revision number = " + changedBugFixCommits[i][j].revision);
+                        lineNumberR += countLineNumber(changedBugFixCommits[i][j].revision);
+                        //System.out.println("lineNumberR = " + lineNumberR);
+                    }
+                }
+            }      
+            
+            bugRepR = bugReplicationR();
+            
+            for(int i=0; i<bugRepR.size(); i++){
+                lineNumberRepR += countLineNumber(bugRepR.get(i).revision);
+                //System.out.println("lineNumberRepR = " + lineNumberRepR);
+            }
+                   
+            //System.out.println("******************************The Percentage of Line Coverage in Regular = " + (float) lineNumberRepR/lineNumberR*100 + "***********************************");
+            
+            // -----------------------------Implementing RQ5 for Micro Clones---------------------------------
+            ArrayList<CodeFragment> bugRepM = new ArrayList<>();
+            int lineNumberM = 0;
+            int lineNumberRepM = 0;
+            
+            // Looping through the changed bug-fix commit 2D array
+            for(int i = 0; i<changedBugFixCommits.length; i++){
+                for(int j = 0; j<changedBugFixCommits.length; j++){
+                    if(changedBugFixCommits[i][j] != null){
+                        //System.out.println("Revision number = " + changedBugFixCommits[i][j].revision);
+                        lineNumberM += countLineNumberMicro(changedBugFixCommits[i][j].revision);
+                        //System.out.println("lineNumberM = " + lineNumberM);
+                    }
+                }
+            }      
+            
+            bugRepM = bugReplicationM();
+            
+            for(int i=0; i<bugRepM.size(); i++){
+                lineNumberRepM += countLineNumberMicro(bugRepM.get(i).revision);
+                //System.out.println("lineNumberRepM = " + lineNumberRepM);
+            }
+                   
+            //System.out.println("******************************The Percentage of Line Coverage in Micro = " + (float) lineNumberRepM/lineNumberM*100 + "***********************************");
+            
+            System.out.println("Results for RQ5 is: \n");
+            
+            System.out.println("lineNumberR = " + lineNumberR);
+            System.out.println("lineNumberRepR = " + lineNumberRepR);
+            System.out.println("The Percentage of Line Coverage in Regular = " + (float) lineNumberRepR/lineNumberR*100);
+            
+            System.out.println("lineNumberM = " + lineNumberM);
+            System.out.println("lineNumberRepM = " + lineNumberRepM);
+            System.out.println("The Percentage of Line Coverage in Micro = " + (float) lineNumberRepM/lineNumberM*100);
+            
+        }catch(Exception e){
+            System.out.println("Error in bugReplicationRQ5: " + e);
+            e.printStackTrace();
+        }
+    }
+    
+    public int countLineNumber(int rev){
+        int lineNumber = 0;
+        try{
+            // Here I use cfFile (a one dimensional array) to store each xml file. It will store each clone fragments (each source tag) in each row.
+            CodeFragment[] cfFile = new CodeFragment[5000];
+
+            File regularXmlFile = new File(InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
+
+            if(regularXmlFile.exists()) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(regularXmlFile))); // All Type
+
+                String str;
+                int i = 0;
+
+                while((str = br.readLine()) != null){
+                    if(str.contains("<source")){
+                        cfFile[i] = new CodeFragment();
+                        cfFile[i].revision = rev;
+
+                        cfFile[i].filepath = str.split("[\"]+")[1].trim();
+                        //System.out.println(" i = " + i + " cfFile[i].filepath = " + cfFile[i].filepath);
+
+                        cfFile[i].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                        //System.out.println(" i = " + i + " cfFile[i].startline = " + cfFile[i].startline);
+
+                        cfFile[i].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
+                        //System.out.println(" i = " + i + " cfFile[i].endline = " + cfFile[i].endline);
+
+                        int cloneSize = (cfFile[i].endline-cfFile[i].startline) + 1;
+                        //System.out.println("cloneSize = " + cloneSize);
+
+                        lineNumber += cloneSize;
+                        //System.out.println("Total line numbers = " + lineNumber);
+
+                        if (cfFile[i].filepath.contains("version-")) {
+                            cfFile[i].filepath = cfFile[i].filepath.replaceAll(".ifdefed", "");
+
+                            String[] filePath = cfFile[i].filepath.split("version-\\d*\\/");
+                            cfFile[i].filepath = filePath[1];
+
+                            //System.out.println("cfFile[" + i + "] = " + cfFile[i].filepath + " Start Line = " + cfFile[i].startline
+                            //+ " End Line = " + cfFile[i].endline);
+                        }
+                        i++;
+                    }
+                }
+            }           
+        
+        } catch(Exception e){
+            System.out.println("Error in countLineNumber: " + e);
+            e.printStackTrace();
+        }
+    return lineNumber;
+    }
+    
+    public int countLineNumberMicro(int rev){
+        int lineNumber = 0;
+        try{
+            // Here I use cfFile (a one dimensional array) to store each xml file. It will store each clone fragments (each source tag) in each row.
+            CodeFragment[] cfFile = new CodeFragment[10000];
+
+            File regularXmlFile = new File(InputParameters.pathMicro + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
+
+            if(regularXmlFile.exists()) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(regularXmlFile))); // All Type
+
+                String str;
+                int i = 0;
+
+                while((str = br.readLine()) != null){
+                    if(str.contains("<source")){
+                        cfFile[i] = new CodeFragment();
+                        cfFile[i].revision = rev;
+
+                        cfFile[i].filepath = str.split("[\"]+")[1].trim();
+                        //System.out.println(" i = " + i + " cfFile[i].filepath = " + cfFile[i].filepath);
+
+                        cfFile[i].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                        //System.out.println(" i = " + i + " cfFile[i].startline = " + cfFile[i].startline);
+
+                        cfFile[i].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
+                        //System.out.println(" i = " + i + " cfFile[i].endline = " + cfFile[i].endline);
+
+                        int cloneSize = (cfFile[i].endline-cfFile[i].startline) + 1;
+                        //System.out.println("cloneSize = " + cloneSize);
+
+                        lineNumber += cloneSize;
+                        //System.out.println("Total line numbers = " + lineNumber);
+
+                        if (cfFile[i].filepath.contains("version-")) {
+                            cfFile[i].filepath = cfFile[i].filepath.replaceAll(".ifdefed", "");
+
+                            String[] filePath = cfFile[i].filepath.split("version-\\d*\\/");
+                            cfFile[i].filepath = filePath[1];
+
+                            //System.out.println("cfFile[" + i + "] = " + cfFile[i].filepath + " Start Line = " + cfFile[i].startline
+                            //+ " End Line = " + cfFile[i].endline);
+                        }
+                        i++;
+                    }
+                }
+            }           
+        
+        } catch(Exception e){
+            System.out.println("Error in countLineNumber: " + e);
+            e.printStackTrace();
+        }
+    return lineNumber;
+    }
+    
     public ArrayList<CodeFragment> bugReplicationR(){
         ArrayList<CodeFragment> bugRep = new ArrayList<>();
         try{          
@@ -728,7 +911,7 @@ public class BugReplicationMicroRegularClones {
                         if(cloneFragmentPairINR[0] != null && cloneFragmentPairINR[1] != null){
                             if(isClonePairBinary(cloneFragmentPairINR[0], cloneFragmentPairINR[1]) == 1){
                                 numReplicatedBugFixCommits++;
-                                System.out.println("////////////////////////////////////////////////////////////////////////////Replicated Bug Fixing Change Found////////////////////////////////////////////////////////////////////////////");
+                                System.out.println("////////////////////////////////////////////////////////////////////////////Replicated Bug Fixing Change Found (Regular)////////////////////////////////////////////////////////////////////////////");
                                 //System.out.println("numReplicatedBugFixCommits for Regular Clones = " + numReplicatedBugFixCommits);
                                 
                                 bugRep.add(cloneFragmentPair[x][0]);
@@ -827,7 +1010,7 @@ public class BugReplicationMicroRegularClones {
                         if(cloneFragmentPairINR[0] != null && cloneFragmentPairINR[1] != null){
                             if(isClonePairBinaryMicro(cloneFragmentPairINR[0], cloneFragmentPairINR[1]) == 1){
                                 numReplicatedBugFixCommits++;
-                                System.out.println("////////////////////////////////////////////////////////////////////////////Replicated Bug Fixing Change Found////////////////////////////////////////////////////////////////////////////");
+                                System.out.println("////////////////////////////////////////////////////////////////////////////Replicated Bug Fixing Change Found (Micro)////////////////////////////////////////////////////////////////////////////");
                                 System.out.println("numReplicatedBugFixCommits for Micro Clones = " + numReplicatedBugFixCommits);
                                 
                                 bugRep.add(cloneFragmentPair[x][0]);
@@ -923,7 +1106,7 @@ public class BugReplicationMicroRegularClones {
                                             ||((changedBugFixCommits[i][j].startline >= cfFile[m][n].startline) && (changedBugFixCommits[i][j].endline >= cfFile[m][n].endline) 
                                                 && (changedBugFixCommits[i][j].startline <= cfFile[m][n].endline))){
                                         
-                                            System.out.println("*********************************************** File Name matched ***********************************************");
+                                            System.out.println("*********************************************** File Name matched (Regular) ***********************************************");
                                             
                                             //System.out.println("Matched CF from changedBugFixCommits["+i+"]["+j+"] = " + changedBugFixCommits[i][j].filepath + " Start Line = " 
                                                     //+ changedBugFixCommits[i][j].startline + " End Line = " + changedBugFixCommits[i][j].endline);
@@ -988,7 +1171,7 @@ public class BugReplicationMicroRegularClones {
                         //System.out.println("classID2 in Regular = " + classID2 + "\n");
                         
                         if(classID1 == classID2){
-                            System.out.println("********************************************Pair Found********************************************");
+                            System.out.println("********************************************Pair Found (Regular)********************************************");
                             cfp[x][0] = cfFileMatch[i];
                             cfp[x][1] = cfFileMatch[j];
                             x++;
@@ -1042,7 +1225,7 @@ public class BugReplicationMicroRegularClones {
                                             ||((changedBugFixCommits[i][j].startline >= cfXmlFileMicro[m][n].startline) && (changedBugFixCommits[i][j].endline >= cfXmlFileMicro[m][n].endline) 
                                                 && (changedBugFixCommits[i][j].startline <= cfXmlFileMicro[m][n].endline))){
                                         
-                                            System.out.println("*********************************************** File Name matched ***********************************************");
+                                            System.out.println("*********************************************** File Name matched (Micro) ***********************************************");
                                             
                                             System.out.println("Matched CF from changedBugFixCommits["+i+"]["+j+"] = " + changedBugFixCommits[i][j].filepath + " Start Line = " 
                                                 + changedBugFixCommits[i][j].startline + " End Line = " + changedBugFixCommits[i][j].endline);
@@ -1107,7 +1290,7 @@ public class BugReplicationMicroRegularClones {
                         //System.out.println("classID2 in Micro = " + classID2 + "\n");
                         
                         if(classID1 == classID2){
-                            System.out.println("********************************************Pair Found********************************************");
+                            System.out.println("********************************************Pair Found (Micro)********************************************");
                             cfpMicro[x][0] = cfXmlFileMatch[i];
                             cfpMicro[x][1] = cfXmlFileMatch[j];
                             x++;
@@ -1127,7 +1310,7 @@ public class BugReplicationMicroRegularClones {
                             System.out.println("isClonePairMicro: Before excluding cfpMicro["+i+"]["+j+"].revision = " + cfpMicro[i][j].revision + " Filepath = " 
                                 + cfpMicro[i][j].filepath + " Startline = " + cfpMicro[i][j].startline + " Endline = " + cfpMicro[i][j].endline);
         
-        // Eliminating micro-clone pairs which reside in regular clone pairs
+        // Eliminating micro-clone pairs which reside in regular clone pairs****************************IMPORTANT**********************************************
         for(int i = 0; cfpMicro[i][0] != null; i++){
             for(int j = 0; cfpReg[j][0] != null; j++){
                 if(cfpMicro[i][0].filepath.equals(cfpReg[j][0].filepath) && cfpMicro[i][1].filepath.equals(cfpReg[j][1].filepath)){
@@ -1224,7 +1407,7 @@ public class BugReplicationMicroRegularClones {
                         cfFile[i][j].filepath = filePath[1];
 
                         //System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
-                        //    + " End Line = " + cfFile[i][j].endline);
+                            //+ " End Line = " + cfFile[i][j].endline);
                     }                      
                 }               
             }
