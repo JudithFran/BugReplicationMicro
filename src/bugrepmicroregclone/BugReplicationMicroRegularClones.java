@@ -769,7 +769,9 @@ public class BugReplicationMicroRegularClones {
 
             File regularXmlFile = new File(InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
 
-            if(regularXmlFile.exists()) {
+            //if (regularXmlFile.exists() && rev <= 100) { // Tuning for feasible experiment for Jabref
+            if (regularXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol    
+                
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(regularXmlFile))); // All Type
 
                 String str;
@@ -822,10 +824,12 @@ public class BugReplicationMicroRegularClones {
             // Here I use cfFile (a one dimensional array) to store each xml file. It will store each clone fragments (each source tag) in each row.
             CodeFragment[] cfFile = new CodeFragment[10000];
 
-            File regularXmlFile = new File(InputParameters.pathMicro + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
+            File microXmlFile = new File(InputParameters.pathMicro + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
 
-            if(regularXmlFile.exists()) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(regularXmlFile))); // All Type
+            //if (microXmlFile.exists() && rev <= 100) { // Tuning for feasible experiment for Jabref
+            if (microXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol
+                
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(microXmlFile))); // All Type
 
                 String str;
                 int i = 0;
@@ -865,7 +869,7 @@ public class BugReplicationMicroRegularClones {
             }           
         
         } catch(Exception e){
-            System.out.println("Error in countLineNumber: " + e);
+            System.out.println("Error in countLineNumberMicro: " + e);
             e.printStackTrace();
         }
     return lineNumber;
@@ -1368,53 +1372,54 @@ public class BugReplicationMicroRegularClones {
         try{
             File regularXmlFile = new File(InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
             
-            if(regularXmlFile.exists()){
+            //if (regularXmlFile.exists() && rev <= 100) { // Tuning for feasible experiment for Jabref
+            if (regularXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol
             
-            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (regularXmlFile))); // All Type           
-            //BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
-            String str = "";
-            int i = -1;
-            int j = -1;
+                BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (regularXmlFile))); // All Type           
+                //BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
+                String str = "";
+                int i = -1;
+                int j = -1;
             
-            while((str = br.readLine()) != null){
+                while((str = br.readLine()) != null){
                 
-                if(str.contains("<class ")){  
-                    i++;
-                    j = -1;
-                    continue;
-                }
+                    if(str.contains("<class ")){  
+                        i++;
+                        j = -1;
+                        continue;
+                    }
                 
-                if(str.contains("<source")){
+                    if(str.contains("<source")){
                     
-                    j++;    
+                        j++;    
                     
-                    cfFile[i][j] = new CodeFragment();
-                    cfFile[i][j].revision = rev;
+                        cfFile[i][j] = new CodeFragment();
+                        cfFile[i][j].revision = rev;
                     
-                    cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
-                    //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].filepath = " + cfFile[i][j].filepath);
+                        cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
+                        //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].filepath = " + cfFile[i][j].filepath);
                     
-                    cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
-                    //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].startline = " + cfFile[i][j].startline);
+                        cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                        //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].startline = " + cfFile[i][j].startline);
                     
-                    cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
-                    //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].endline = " + cfFile[i][j].endline);
+                        cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
+                        //System.out.println(" i = " + i + " j = " + j + " cfFile[i][j].endline = " + cfFile[i][j].endline);
                         
-                    if (cfFile[i][j].filepath.contains("version-")) {
-                        cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
+                        if (cfFile[i][j].filepath.contains("version-")) {
+                            cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
                                 
-                        String[] filePath = cfFile[i][j].filepath.split("version-\\d*\\/");
-                        cfFile[i][j].filepath = filePath[1];
+                            String[] filePath = cfFile[i][j].filepath.split("version-\\d*\\/");
+                            cfFile[i][j].filepath = filePath[1];
 
-                        //System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
-                            //+ " End Line = " + cfFile[i][j].endline);
-                    }                      
-                }               
-            }
+                            //System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
+                                //+ " End Line = " + cfFile[i][j].endline);
+                        }                      
+                    }               
+                }
             }
             
         } catch(Exception e){
-            System.out.println("error in method fileRead()." + e);
+            System.out.println("Error in method fileRead()." + e);
             e.printStackTrace();
         }
         return cfFile;
@@ -1429,45 +1434,46 @@ public class BugReplicationMicroRegularClones {
         try{
             File microXmlFile = new File(InputParameters.pathMicro + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
             
-            if(microXmlFile.exists()){
-            
-            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathMicro + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
-            
-            String str = "";
-            int i = -1;
-            int j = -1;
-            
-            while((str = br.readLine()) != null){
+            //if (microXmlFile.exists() && rev <= 100) { // Tuning for feasible experiment for Jabref
+            if (microXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol
                 
-                if(str.contains("<class ")){  
-                    i++;
-                    j = -1;
-                    continue;
-                }
+                BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathMicro + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
+            
+                String str = "";
+                int i = -1;
+                int j = -1;
+            
+                while((str = br.readLine()) != null){
                 
-                if(str.contains("<source")){
+                    if(str.contains("<class ")){  
+                        i++;
+                        j = -1;
+                        continue;
+                    }
+                
+                    if(str.contains("<source")){
                         
-                    j++;
-                    cfFile[i][j] = new CodeFragment();
-                    cfFile[i][j].revision = rev;
+                        j++;
+                        cfFile[i][j] = new CodeFragment();
+                        cfFile[i][j].revision = rev;
                     
-                    cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
+                        cfFile[i][j].filepath = str.split("[\"]+")[1].trim();
                     
-                    cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
+                        cfFile[i][j].startline = Integer.parseInt(str.split("[\"]+")[3].trim());
                     
-                    cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
+                        cfFile[i][j].endline = Integer.parseInt(str.split("[\"]+")[5].trim());
                         
-                    if (cfFile[i][j].filepath.contains("version-")) {
-                        cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
+                        if (cfFile[i][j].filepath.contains("version-")) {
+                            cfFile[i][j].filepath = cfFile[i][j].filepath.replaceAll(".ifdefed", "");
                                 
-                        String[] filePath = cfFile[i][j].filepath.split("version-\\d*\\/");
-                        cfFile[i][j].filepath = filePath[1];
+                            String[] filePath = cfFile[i][j].filepath.split("version-\\d*\\/");
+                            cfFile[i][j].filepath = filePath[1];
 
-                        //System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
-                            //+ " End Line = " + cfFile[i][j].endline);
-                    }                      
-                }               
-            }
+                            //System.out.println("cfFile[" + i + "][" + j + "] = " + cfFile[i][j].filepath + " Start Line = " + cfFile[i][j].startline 
+                                //+ " End Line = " + cfFile[i][j].endline);
+                        }                      
+                    }               
+                }
             }
         
         } catch(Exception e){
