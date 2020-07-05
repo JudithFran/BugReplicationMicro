@@ -190,6 +190,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         try{
         // ---------------------------------------------------------------- RQ4 ---------------------------------------------------------------------
+        long startTime = System.currentTimeMillis();
         String systemName = "";
             systemName = jComboBox1.getSelectedItem().toString();
             //System.out.println("System selected in ComboBox: " + systemName);
@@ -203,6 +204,20 @@ public class MainJFrameForm extends javax.swing.JFrame {
             
             brm.bugReplication();
             
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            long sTime = (long) (elapsedTime*0.001);
+            long mTime = sTime/60;
+            sTime = sTime%60;
+            long hTime;
+
+            if(mTime >= 60) {
+                hTime = mTime/60;
+                mTime = mTime%60;
+                System.out.println("Total execution time for RQ4 = " + hTime + " hours " + mTime + " minutes");
+            }
+            else
+                System.out.println("Total execution time for RQ4 = " + mTime + " minutes " + sTime + " seconds");
         }catch(Exception e){
             System.out.println("error in jButton5ActionPerformed(RQ4): " + e);
             e.printStackTrace();
@@ -213,6 +228,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             // ---------------------------------------------------------------- RQ1 ---------------------------------------------------------------------
+            long startTime = System.currentTimeMillis();
             String systemName = "";
             systemName = jComboBox1.getSelectedItem().toString();
             //System.out.println("System selected in ComboBox: " + systemName);
@@ -229,7 +245,21 @@ public class MainJFrameForm extends javax.swing.JFrame {
             
             //System.out.println("-----------------------------------------Micro Clone Analysis Starts Here--------------------------------------------\n");
             //brm.bugReplicationM();
-        
+            
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            long sTime = (long) (elapsedTime*0.001);
+            long mTime = sTime/60;
+            sTime = sTime%60;
+            long hTime;
+
+            if(mTime >= 60) {
+                hTime = mTime/60;
+                mTime = mTime%60;
+                System.out.println("Total execution time for RQ1 = " + hTime + " hours " + mTime + " minutes");
+            }
+            else
+                System.out.println("Total execution time for RQ1 = " + mTime + " minutes " + sTime + " seconds");
         }catch(Exception e){
             System.out.println("error in jButton2ActionPerformed(RQ1): " + e);
             e.printStackTrace();
@@ -240,6 +270,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         try{
         // ---------------------------------------------------------------- RQ2 ---------------------------------------------------------------------
+        long startTime = System.currentTimeMillis();
         String systemName = "";
             systemName = jComboBox1.getSelectedItem().toString();
             //System.out.println("System selected in ComboBox: " + systemName);
@@ -251,6 +282,20 @@ public class MainJFrameForm extends javax.swing.JFrame {
             
             brm.bugReplicationRQ2();
             
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            long sTime = (long) (elapsedTime*0.001);
+            long mTime = sTime/60;
+            sTime = sTime%60;
+            long hTime;
+
+            if(mTime >= 60) {
+                hTime = mTime/60;
+                mTime = mTime%60;
+                System.out.println("Total execution time for RQ2 = " + hTime + " hours " + mTime + " minutes");
+            }
+            else
+                System.out.println("Total execution time for RQ2 = " + mTime + " minutes " + sTime + " seconds");
         }catch(Exception e){
             System.out.println("error in jButton3ActionPerformed(RQ2): " + e);
             e.printStackTrace();
@@ -261,6 +306,7 @@ public class MainJFrameForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         try{
         // ---------------------------------------------------------------- RQ3 ---------------------------------------------------------------------
+        long startTime = System.currentTimeMillis();
         String systemName = "";
             systemName = jComboBox1.getSelectedItem().toString();
             //System.out.println("System selected in ComboBox: " + systemName);
@@ -272,7 +318,20 @@ public class MainJFrameForm extends javax.swing.JFrame {
             
             brm.bugReplicationRQ3();
             
-            
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            long sTime = (long) (elapsedTime*0.001);
+            long mTime = sTime/60;
+            sTime = sTime%60;
+            long hTime;
+
+            if(mTime >= 60) {
+                hTime = mTime/60;
+                mTime = mTime%60;
+                System.out.println("Total execution time for RQ3 = " + hTime + " hours " + mTime + " minutes");
+            }
+            else
+                System.out.println("Total execution time for RQ3 = " + mTime + " minutes " + sTime + " seconds");
         }catch(Exception e){
             System.out.println("error in jButton4ActionPerformed(RQ3): " + e);
             e.printStackTrace();
