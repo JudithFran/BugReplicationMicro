@@ -27,7 +27,7 @@ class CodeFragment {
 
     public void getFragment() {
         
-        String abs_filepath = InputParameters.pathRegular + revision + "/" + filepath;    
+        String abs_filepath = InputParameters.pathSystem + revision + "/" + filepath;    
         
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(abs_filepath)));
@@ -54,7 +54,7 @@ class CodeFragment {
 
     public void showFragment() {
 
-        String abs_filepath = InputParameters.pathRegular + revision + "/" + filepath;
+        String abs_filepath = InputParameters.pathSystem + revision + "/" + filepath;
         
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(abs_filepath)));
@@ -543,7 +543,8 @@ public class BugReplicationMicroRegularClones {
         int numClones = 0;
         try{
             
-            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + cf.revision + "_blocks-blind-clones/version-" + cf.revision + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
+            //BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + cf.revision + "_blocks-blind-clones/version-" + cf.revision + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
+            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + cf.revision + "/version-" + cf.revision + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
             
             String str = "";
             int i = -1;
@@ -770,8 +771,9 @@ public class BugReplicationMicroRegularClones {
             File regularXmlFile = new File(InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
 
             //if (regularXmlFile.exists() && rev <= 100) { // Tuning for feasible experiment for Jabref
-            if (regularXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol    
-                
+            //if (regularXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol    
+            //if (regularXmlFile.exists() && rev <= 1025) { // Tuning for feasible experiment for Freecol
+            if (regularXmlFile.exists()) {    
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(regularXmlFile))); // All Type
 
                 String str;
@@ -827,8 +829,9 @@ public class BugReplicationMicroRegularClones {
             File microXmlFile = new File(InputParameters.pathMicro + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
 
             //if (microXmlFile.exists() && rev <= 100) { // Tuning for feasible experiment for Jabref
-            if (microXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol
-                
+            //if (microXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol
+            //if (microXmlFile.exists() && rev <= 1025) { // Tuning for feasible experiment for Freecol
+            if (microXmlFile.exists()) {    
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(microXmlFile))); // All Type
 
                 String str;
@@ -1329,7 +1332,7 @@ public class BugReplicationMicroRegularClones {
                                 + cfpMicro[i][1].filepath + " Startline = " + cfpMicro[i][1].startline + " Endline = " + cfpMicro[i][1].endline);
                         System.out.println("isClonePairMicro: Deleted Pair cfpReg["+j+"][1].revision = " + cfpReg[j][1].revision + " Filepath = " 
                                 + cfpReg[j][1].filepath + " Startline = " + cfpReg[j][1].startline + " Endline = " + cfpReg[j][1].endline);
-                        for(x = i; cfpMicro[x][0] != null; x++){
+                        for(x = i; cfpMicro[x][0] != null && cfpMicro[x+1][0] != null; x++){
                             cfpMicro[x][0] = cfpMicro[x+1][0];
                             cfpMicro[x][1] = cfpMicro[x+1][1];
                         }
@@ -1348,7 +1351,7 @@ public class BugReplicationMicroRegularClones {
                         System.out.println("isClonePairMicro: Deleted Pair cfpReg["+j+"][1].revision = " + cfpReg[j][1].revision + " Filepath = " 
                                 + cfpReg[j][1].filepath + " Startline = " + cfpReg[j][1].startline + " Endline = " + cfpReg[j][1].endline);
                         
-                        for(x = i; cfpMicro[x][0] != null; x++){
+                        for(x = i; cfpMicro[x][0] != null && cfpMicro[x+1][0] != null; x++){
                             cfpMicro[x][0] = cfpMicro[x+1][0];
                             cfpMicro[x][1] = cfpMicro[x+1][1];
                         }
@@ -1370,11 +1373,13 @@ public class BugReplicationMicroRegularClones {
         // and in second dimension it will store each clone fragments (nclones in source tags).
         CodeFragment[][] cfFile = new CodeFragment[1000][1000];
         try{
-            File regularXmlFile = new File(InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
+            //File regularXmlFile = new File(InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
+            File regularXmlFile = new File(InputParameters.pathRegular + rev + "/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
             
             //if (regularXmlFile.exists() && rev <= 100) { // Tuning for feasible experiment for Jabref
-            if (regularXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol
-            
+            //if (regularXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol
+            //if (regularXmlFile.exists() && rev <= 1025) { // Tuning for feasible experiment for Freecol    
+            if (regularXmlFile.exists()) { 
                 BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (regularXmlFile))); // All Type           
                 //BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
                 String str = "";
@@ -1435,8 +1440,9 @@ public class BugReplicationMicroRegularClones {
             File microXmlFile = new File(InputParameters.pathMicro + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"); //All Type
             
             //if (microXmlFile.exists() && rev <= 100) { // Tuning for feasible experiment for Jabref
-            if (microXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol
-                
+            //if (microXmlFile.exists() && rev <= 50) { // Tuning for feasible experiment for Carol
+            //if (microXmlFile.exists() && rev <= 1025) { // Tuning for feasible experiment for Freecol
+            if (microXmlFile.exists()) {     
                 BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathMicro + rev + "_blocks-blind-clones/version-" + rev + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
             
                 String str = "";
@@ -1492,8 +1498,8 @@ public class BugReplicationMicroRegularClones {
         int classID = 0;
         try{
             
-            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + cf.revision + "_blocks-blind-clones/version-" + cf.revision + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
-            
+            //BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + cf.revision + "_blocks-blind-clones/version-" + cf.revision + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
+            BufferedReader br = new BufferedReader (new InputStreamReader (new FileInputStream (InputParameters.pathRegular + cf.revision + "/version-" + cf.revision + "_blocks-blind-clones-0.30-classes.xml"))); // All Type
             String str = "";
             int i = -1;
             int j = -1;
@@ -1653,8 +1659,8 @@ public class BugReplicationMicroRegularClones {
             int changed = 0;
             
 
-            String cfilepath = InputParameters.pathRegular + crevision + "/" + cf.filepath; 
-            String nfilepath = InputParameters.pathRegular + nrevision + "/" + cf.filepath; 
+            String cfilepath = InputParameters.pathSystem + crevision + "/" + cf.filepath; 
+            String nfilepath = InputParameters.pathSystem + nrevision + "/" + cf.filepath; 
                     
             File file = new File(nfilepath);
             if (!file.exists()) {
